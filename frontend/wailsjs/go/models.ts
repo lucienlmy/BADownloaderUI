@@ -167,6 +167,22 @@ export namespace task {
 	        this.song_author = source["song_author"];
 	    }
 	}
+	export class Progress {
+	    index: number;
+	    title: string;
+	    error?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Progress(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.index = source["index"];
+	        this.title = source["title"];
+	        this.error = source["error"];
+	    }
+	}
 	export class TaskInfo {
 	    Index: number;
 	    SongName: string;

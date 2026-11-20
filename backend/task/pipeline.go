@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"slices"
 	"sync"
 	"text/template"
 	"time"
@@ -26,22 +27,25 @@ type Settings struct {
 	Convert          bool
 }
 
-// Progress downloadFinish 事件携带的任务信息
+// Progress downloadFinish 事件携带的任务信息，Error 非空表示任务失败
 type Progress struct {
 	Index int    `json:"index"`
 	Title string `json:"title"`
+	Error string `json:"error,omitempty"`
 }
 
-// Run 并发处理列表中的任务，每个任务结束（含已删除）时发出 downloadFinish 事件
-func (l *List) Run(ctx context.Context, s Settings) {
+// Run 并发处理列表中的任务，每个任务结束（含已删除）时发出 downloadFinish 事件，返回按序号排列的失败任务
+func (l *List) Run(ctx context.Context, s Settings) []Progress {
 	fileName, err := utils.ParseFileName(s.FileNameTemplate)
 	if err != nil {
 		wails.LogErrorf(ctx, "invalid file name template: %v", err)
-		return
+		return nil
 	}
 
 	sem := make(chan struct{}, s.Threads+1)
 	var wg sync.WaitGroup
+	var mu sync.Mutex
+	failed := []Progress{}
 
 	wails.LogPrintf(ctx, "start list download process")
 	for i, t := range l.tasks {
@@ -62,10 +66,17 @@ func (l *List) Run(ctx context.Context, s Settings) {
 
 			if err := t.process(i, s, fileName); err != nil {
 				wails.LogErrorf(ctx, "task %d failed: %v", i, err)
+				progress.Error = err.Error()
+				mu.Lock()
+				failed = append(failed, progress)
+				mu.Unlock()
 			}
 		}()
 	}
 	wg.Wait()
+
+	slices.SortFunc(failed, func(a, b Progress) int { return a.Index - b.Index })
+	return failed
 }
 
 // process 下载流和封面，按需转码，按选项写入元数据并导出

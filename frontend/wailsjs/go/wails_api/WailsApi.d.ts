@@ -17,7 +17,7 @@ export function AddVideoToList(arg1:string,arg2:boolean,arg3:task.Option):Promis
 
 export function Checkffmpeg():Promise<boolean>;
 
-export function DownloadTaskList():Promise<void>;
+export function DownloadTaskList():Promise<Array<task.Progress>>;
 
 export function ExportVideoList():Promise<void>;
 

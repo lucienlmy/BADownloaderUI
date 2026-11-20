@@ -7,6 +7,7 @@ export type SourceKey = 'favlist' | 'season' | 'video' | 'audio' | 'space'
 export interface Progress {
     index: number
     title: string
+    error?: string
 }
 
 // 事件名与回调参数

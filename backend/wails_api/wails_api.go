@@ -15,8 +15,9 @@ func (w *WailsApi) Startup(ctx context.Context) {
 	w.ctx = ctx
 }
 
-func (w *WailsApi) DownloadTaskList() {
-	w.tasks.Run(w.ctx, task.Settings{
+// DownloadTaskList 下载列表中的全部任务，返回失败的任务
+func (w *WailsApi) DownloadTaskList() []task.Progress {
+	return w.tasks.Run(w.ctx, task.Settings{
 		CacheDir:         config.Cfg.GetCachePath(),
 		DownloadDir:      config.Cfg.GetDownloadPath(),
 		FileNameTemplate: config.Cfg.FileConfig.FileNameTemplate,
