@@ -16,6 +16,7 @@ type FileName struct {
 	Quality  string
 	ID       int
 	Format   string
+	SourceID string
 }
 
 // ParseFileName 解析文件名模板
@@ -24,7 +25,7 @@ func ParseFileName(text string) (*template.Template, error) {
 }
 
 // ExportFile 用模板生成文件名，并把文件移动到下载目录
-func ExportFile(tmpl *template.Template, downloadDir, title, subtitle, outputFormat string, listid int, currentPath string) error {
+func ExportFile(tmpl *template.Template, downloadDir, title, subtitle, sourceID, outputFormat string, listid int, currentPath string) error {
 	quality := "normal"
 	if outputFormat == constants.AudioType.Flac {
 		quality = "hires"
@@ -37,6 +38,7 @@ func ExportFile(tmpl *template.Template, downloadDir, title, subtitle, outputFor
 		Quality:  quality,
 		ID:       listid,
 		Format:   outputFormat,
+		SourceID: sourceID,
 	}
 	var output bytes.Buffer
 	if err := tmpl.Execute(&output, fileName); err != nil {

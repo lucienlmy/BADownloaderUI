@@ -35,7 +35,7 @@
                 <var-tooltip class="w-full mb-4" trigger="click">
                     <template #content>
                         <p v-pre>双大括号中的为文件名变量，可以通过自行修改或删除自定义文件名</p>
-                        <p v-pre>列表编号{{.ID}} 视频标题{{.Title}} 单集标题{{.Subtitle}} 音频质量{{.Quality}} 格式后缀名{{.Format}}</p>
+                        <p v-pre>列表编号{{.ID}} 视频标题{{.Title}} 单集标题{{.Subtitle}} 音频质量{{.Quality}} 格式后缀名{{.Format}} 稿件编号{{.SourceID}}</p>
                     </template>
                     <var-input class="m-2.5" variant="outlined" placeholder="文件命名方式" size="small" v-model="config.file_config.file_name_template"
                         :rules="[v => !!v || '该选项不能为空']" @change="handleSave" />

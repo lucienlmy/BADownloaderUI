@@ -4,8 +4,8 @@ import (
 	"bili-audio-downloader/backend/constants"
 )
 
-// WriteMetadata 写入标题、艺术家和封面，音频流直接复制
-func WriteMetadata(input, output, coverPath, songName, songAuthor string, format string) error {
+// WriteMetadata 写入标题、艺术家、稿件编号（注释字段）和封面，音频流直接复制
+func WriteMetadata(input, output, coverPath, songName, songAuthor, sourceID string, format string) error {
 	input, output, err := absPaths(input, output)
 	if err != nil {
 		return err
@@ -42,6 +42,9 @@ func WriteMetadata(input, output, coverPath, songName, songAuthor string, format
 	}
 	if songAuthor != "" {
 		args = append(args, "-metadata", "artist="+songAuthor)
+	}
+	if sourceID != "" {
+		args = append(args, "-metadata", "comment="+sourceID)
 	}
 	metadata := []string{
 		//"-metadata", "album=Album Name", // 专辑名称

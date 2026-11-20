@@ -72,6 +72,14 @@ func (t *Task) cacheID() string {
 	return strconv.Itoa(t.Cid)
 }
 
+// sourceID 返回任务在 B 站的稿件编号，视频为 BV 号，音频为 au 号
+func (t *Task) sourceID() string {
+	if t.Kind == KindAudio {
+		return "au" + t.Auid
+	}
+	return t.Bvid
+}
+
 // info 生成任务信息
 func (t *Task) info(index int) TaskInfo {
 	option := t.Option

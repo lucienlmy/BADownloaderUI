@@ -120,12 +120,12 @@ func (t *Task) process(index int, s Settings, fileName *template.Template) error
 		coverPath = ""
 	}
 	tagged := streamPath + "_meta" + format
-	if err := ffmpeg.WriteMetadata(current, tagged, coverPath, songName, author, format); err != nil {
+	if err := ffmpeg.WriteMetadata(current, tagged, coverPath, songName, author, t.sourceID(), format); err != nil {
 		return fmt.Errorf("write metadata: %w", err)
 	}
 
 	// 文件名中的序号从 1 开始
-	if err := utils.ExportFile(fileName, s.DownloadDir, t.Meta.Title, t.Meta.PageTitle, format, index+1, tagged); err != nil {
+	if err := utils.ExportFile(fileName, s.DownloadDir, t.Meta.Title, t.Meta.PageTitle, t.sourceID(), format, index+1, tagged); err != nil {
 		return fmt.Errorf("export: %w", err)
 	}
 	return nil
